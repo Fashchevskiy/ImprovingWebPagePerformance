@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Оптимізація продуктивності</title>
+
+  <!-- ⚡ Критичні стилі -->
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f2f2f2;
+      color: #222;
+    }
+
+    header {
+      background: #4CAF50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 1rem auto;
+      border-radius: 8px;
+    }
+
+    #lazyContent {
+      padding: 1rem;
+    }
+  </style>
+
+  <!-- ⚙️ Preload шрифтів -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+
+  <!-- 🎯 Відкладене завантаження НЕкритичного CSS -->
+  <link rel="preload" href="styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="styles.min.css"></noscript>
+
+  <!-- ⚙️ Асинхронне JS (об’єднаний та мінімізований) -->
+  <script src="scripts.min.js" async defer></script>
+</head>
+<body>
+  <header>
+    <h1>Покращення продуктивності</h1>
+  </header>
+
+  <!-- 🖼️ Lazy loaded зображення -->
+  <img src="placeholder.jpg" data-src="image.jpg" alt="Опис зображення" loading="lazy" class="lazy-img"/>
+
+  <!-- 📦 Відкладене завантаження додаткового контенту -->
+  <div id="lazyContent">Завантаження додаткового контенту...</div>
+
+  <script>
+    // 🔁 Lazy loading зображення (якщо browser не підтримує `loading="lazy"`)
+    document.addEventListener("DOMContentLoaded", () => {
+      const lazyImages = document.querySelectorAll('img.lazy-img');
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            img.classList.remove('lazy-img');
+            observer.unobserve(img);
+          }
+        });
+      });
+
+      lazyImages.forEach(img => observer.observe(img));
+
+      // 🕒 Відкладене завантаження додаткового контенту
+      setTimeout(() => {
+        document.getElementById("lazyContent").innerHTML = "<p>Цей контент завантажено після основної сторінки.</p>";
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
